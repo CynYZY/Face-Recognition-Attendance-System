@@ -124,7 +124,7 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
         # 设置窗口名称和图标
         self.setWindowTitle('人脸识别考勤系统')
-        self.setWindowIcon(QIcon('fcblogo.jpg'))
+        self.setWindowIcon(QIcon('ntulogo.jpg'))
         # label_time显示系统时间
         timer = QTimer(self)
         timer.timeout.connect(self.showTimeText)
@@ -358,7 +358,7 @@ class MainWindow(QWidget):
                 # 将签到信息写入数据库
                 self.lineTextInfo2 = []
                 # 打开数据库连接
-                db2 = pymysql.connect("localhost", "root", "mysql105", "facerecognition")
+                db2 = pymysql.connect("localhost", "root", "root", "facerecognition")
                 # 使用cursor()方法获取操作游标
                 cursor2 = db2.cursor()
                 # 获取系统时间，保存到秒
@@ -410,7 +410,7 @@ class MainWindow(QWidget):
         # 选择的班级
         input_Class = self.ui.comboBox.currentText()
         # 打开数据库连接
-        db = pymysql.connect("localhost", "root", "mysql105", "facerecognition")
+        db = pymysql.connect("localhost", "root", "root", "facerecognition")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
 
@@ -458,7 +458,7 @@ class MainWindow(QWidget):
         # 为防止输入为空卡死，先进行是否输入数据的判断
         if self.ui.lineEdit.isModified() or self.ui.lineEdit_2.isModified():
             # 打开数据库连接
-            db = pymysql.connect("localhost", "root", "mysql105", "facerecognition")
+            db = pymysql.connect("localhost", "root", "root", "facerecognition")
             # 使用cursor()方法获取操作游标
             cursor = db.cursor()
             # 获取系统时间，保存到秒
@@ -600,7 +600,7 @@ class infoDialog(QWidget):
 
         # 设置窗口名称和图标
         self.setWindowTitle('个人信息采集')
-        self.setWindowIcon(QIcon('fcblogo.jpg'))
+        self.setWindowIcon(QIcon('ntulogo.jpg'))
 
         # 设置单张图片背景
         pixmap = QPixmap('background2.png')

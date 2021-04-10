@@ -23,9 +23,11 @@ import dlib
 # 导入数据库操作包
 import pymysql
 
+
 # 定义活体检测-眨眼检测类
 class BlinksDetectThread(QThread):
     trigger = QtCore.pyqtSignal()
+
     def __init__(self):
         super(BlinksDetectThread, self).__init__()
         # 定义两个常数，一个用于眼睛纵横比以指示眨眼，第二个作为眨眼连续帧数的阈值
@@ -49,6 +51,7 @@ class BlinksDetectThread(QThread):
         self.cap3 = cv2.VideoCapture()
 
         # 定义眨眼检测距离函数
+
     def eye_aspect_ratio(self, eye):
         # 计算两组垂直方向上的眼睛标记（x，y）坐标之间的欧氏距离
         self.A = dist.euclidean(eye[1], eye[5])
@@ -112,6 +115,7 @@ class BlinksDetectThread(QThread):
         self.BlinksFlag = 0
         if flag2 == 0:
             VideoStream(src=cv2.CAP_DSHOW).stop()
+
 
 #########################################################################################
 
@@ -410,7 +414,7 @@ class MainWindow(QWidget):
         # 选择的班级
         input_Class = self.ui.comboBox.currentText()
         # 打开数据库连接
-        db = pymysql.connect("localhost", "root", "root", "facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
 
@@ -451,14 +455,16 @@ class MainWindow(QWidget):
     # 请假/补签登记
     def leaveButton(self):
         self.leaveStudents(1)
+
     def supplymentButton(self):
         self.leaveStudents(2)
+
     def leaveStudents(self, button):
         self.lineTextInfo = []
         # 为防止输入为空卡死，先进行是否输入数据的判断
         if self.ui.lineEdit.isModified() or self.ui.lineEdit_2.isModified():
             # 打开数据库连接
-            db = pymysql.connect("localhost", "root", "root", "facerecognition")
+            db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
             # 使用cursor()方法获取操作游标
             cursor = db.cursor()
             # 获取系统时间，保存到秒
@@ -483,7 +489,8 @@ class MainWindow(QWidget):
                 print("sql execute failed")
             else:
                 print("sql execute success")
-                QMessageBox.warning(self, "warning", "{} 登记成功，请勿重复操作！".format(self.description), QMessageBox.Yes | QMessageBox.No)
+                QMessageBox.warning(self, "warning", "{} 登记成功，请勿重复操作！".format(self.description),
+                                    QMessageBox.Yes | QMessageBox.No)
             # 提交到数据库执行
             db.commit()
             cursor.close()
@@ -497,7 +504,7 @@ class MainWindow(QWidget):
     # 使用ID当索引找到其它信息
     def useIDGetInfo(self, ID):
         # 打开数据库连接
-        db = pymysql.connect("localhost", "root", "root", "facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 查询语句，实现通过ID关键字检索个人信息的功能
@@ -519,7 +526,7 @@ class MainWindow(QWidget):
 
     # 显示迟到和未到
     def showLateAbsentee(self):
-        db = pymysql.connect("localhost", "root", "root", "facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
         cursor = db.cursor()
         # 一定要注意字符串在检索时要加''！
         sql1 = "select name from checkin where Description = '{}'".format('迟到')
@@ -589,6 +596,7 @@ class MainWindow(QWidget):
         GeneratorModel.TrainModel()
         print('Model have been trained!')
 
+
 ##########################################################################################
 
 class infoDialog(QWidget):
@@ -625,6 +633,7 @@ class infoDialog(QWidget):
     def handle_click(self):
         if not self.isVisible():
             self.show()
+
     def handle_close(self):
         self.close()
 
@@ -661,8 +670,9 @@ class infoDialog(QWidget):
                                               minNeighbors=5, minSize=(30, 30))
             for (x, y, w, h) in rects:
                 cv2.rectangle(frame2, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                frame2 = cv2.putText(frame2, "Have token {}/20 faces".format(self.photos), (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                            (200, 100, 50), 2)
+                frame2 = cv2.putText(frame2, "Have token {}/20 faces".format(self.photos), (50, 60),
+                                     cv2.FONT_HERSHEY_SIMPLEX, 0.7,
+                                     (200, 100, 50), 2)
             # 显示输出框架
             show_video2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
             # opencv读取图片的样式，不能通过Qlabel进行显示，需要转换为Qimage。
@@ -688,7 +698,7 @@ class infoDialog(QWidget):
 
     def takePhoto(self):
         self.photos += 1
-        self.filename = "C:\\Users\\Ziyi\\Documents\\face-recognition-system\\dataset\\{}\\".format(self.text)
+        self.filename = "C:\\Users\\Cynth\\Documents\\face-recognition-system\\dataset\\{}\\".format(self.text)
         self.mkdir(self.filename)
         photo_save_path = os.path.join(os.path.dirname(os.path.abspath('__file__')), '{}'.format(self.filename))
         self.showImage2.save(photo_save_path + datetime.now().strftime("%Y%m%d%H%M%S") + ".png")
@@ -702,7 +712,7 @@ class infoDialog(QWidget):
         # 键入ID
         self.input_ID = self.Dialog.lineEdit_ID.text()
         # 打开数据库连接
-        db = pymysql.connect("localhost", "root", "root", "facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 查询语句，实现通过ID关键字检索个人信息的功能
@@ -755,7 +765,7 @@ class infoDialog(QWidget):
 
     def changeInfo(self):
         # 打开数据库连接
-        db = pymysql.connect("localhost", "root", "root", "facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 写入数据库
@@ -776,6 +786,7 @@ class infoDialog(QWidget):
         cursor.close()
         # 关闭数据库连接
         db.close()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

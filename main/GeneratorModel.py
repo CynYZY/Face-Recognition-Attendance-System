@@ -120,7 +120,7 @@ def TrainModel():
     # 训练用于接受面部128-d嵌入的模型，然后产生实际的面部识别
     print("[INFO] training model...")
     recognizer = SVC(C=1.0, kernel="linear", probability=True)
-    recognizer.fit(data["embeddings"], labels)
+    recognizer.fit(data["embeddings", ""], labels)
 
     # 将实际的人脸识别模型写入磁盘
     f = open(recognizer_path, "wb")

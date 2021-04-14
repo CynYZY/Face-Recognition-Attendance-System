@@ -23,7 +23,6 @@ import dlib
 # 导入数据库操作包
 import pymysql
 
-
 # 定义活体检测-眨眼检测类
 class BlinksDetectThread(QThread):
     trigger = QtCore.pyqtSignal()
@@ -362,7 +361,7 @@ class MainWindow(QWidget):
                 # 将签到信息写入数据库
                 self.lineTextInfo2 = []
                 # 打开数据库连接
-                db2 = pymysql.connect("localhost", "root", "root", "facerecognition")
+                db2 = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
                 # 使用cursor()方法获取操作游标
                 cursor2 = db2.cursor()
                 # 获取系统时间，保存到秒
@@ -430,7 +429,7 @@ class MainWindow(QWidget):
                 for i in results:
                     self.nums.append(i[1])
             except:
-                print("Error: unable to fetch data")
+                print("Error: unable to fetch data #1")
 
         # 用于查询每班的实到人数
         sql2 = "select * from checkin where class = {}".format(input_Class)
@@ -444,10 +443,10 @@ class MainWindow(QWidget):
                 for i in results2:
                     self.nums2.append(i[2])
             except:
-                print("Error: unable to fetch data")
+                print("Error: unable to fetch data #2")
 
         # lcd控件显示人数
-        self.ui.lcd_1.display(self.nums[0])
+        self.ui.lcd_1.display(self.nums)
         self.ui.lcd_2.display(len(self.nums2))
         # 关闭数据库连接
         db.close()
@@ -522,7 +521,7 @@ class MainWindow(QWidget):
                     self.checkInfo.append(i[2])
                 return self.checkInfo
             except:
-                print("Error: unable to fetch data")
+                print("Error: unable to fetch data #3")
 
     # 显示迟到和未到
     def showLateAbsentee(self):
@@ -731,7 +730,7 @@ class infoDialog(QWidget):
                     self.lists.append(i[3])
                     self.lists.append(i[4])
             except:
-                print("Error: unable to fetch data")
+                print("Error: unable to fetch data #4")
 
         # 设置显示数据层次结构，5行2列(包含行表头)
         self.model = QtGui.QStandardItemModel(5, 0)

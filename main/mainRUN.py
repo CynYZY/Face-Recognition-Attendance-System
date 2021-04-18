@@ -78,6 +78,7 @@ class BlinksDetectThread(QThread):
                 # 从线程视频文件流中抓取帧，调整其大小，并将其转换为灰度通道
                 vs = VideoStream(src=cv2.CAP_DSHOW).start()
                 frame3 = vs.read()
+                frame3 = cv2.flip(frame3,1)
                 # ret, frame3 = self.cap3.read()
                 QApplication.processEvents()
                 frame3 = imutils.resize(frame3, width=900)
@@ -331,6 +332,7 @@ class MainWindow(QWidget):
                 if bt_liveness == '停止检测':
                     ChineseText = ChinesePutText.put_chinese_text('microsoft.ttf')
                     frame = ChineseText.draw_text(frame, (330, 80), ' 请眨眨眼睛 ', 25, (55, 255, 55))
+                    frame = cv2.flip(frame,1)
                 # 显示输出框架
                 show_video = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
                 # opencv读取图片的样式，不能通过Qlabel进行显示，需要转换为Qimage。
@@ -361,7 +363,7 @@ class MainWindow(QWidget):
                 # 将签到信息写入数据库
                 self.lineTextInfo2 = []
                 # 打开数据库连接
-                db2 = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+                db2 = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
                 # 使用cursor()方法获取操作游标
                 cursor2 = db2.cursor()
                 # 获取系统时间，保存到秒
@@ -413,7 +415,7 @@ class MainWindow(QWidget):
         # 选择的班级
         input_Class = self.ui.comboBox.currentText()
         # 打开数据库连接
-        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
 
@@ -463,7 +465,7 @@ class MainWindow(QWidget):
         # 为防止输入为空卡死，先进行是否输入数据的判断
         if self.ui.lineEdit.isModified() or self.ui.lineEdit_2.isModified():
             # 打开数据库连接
-            db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+            db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
             # 使用cursor()方法获取操作游标
             cursor = db.cursor()
             # 获取系统时间，保存到秒
@@ -503,7 +505,7 @@ class MainWindow(QWidget):
     # 使用ID当索引找到其它信息
     def useIDGetInfo(self, ID):
         # 打开数据库连接
-        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 查询语句，实现通过ID关键字检索个人信息的功能
@@ -525,7 +527,7 @@ class MainWindow(QWidget):
 
     # 显示迟到和未到
     def showLateAbsentee(self):
-        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
         cursor = db.cursor()
         # 一定要注意字符串在检索时要加''！
         sql1 = "select name from checkin where Description = '{}'".format('迟到')
@@ -697,7 +699,7 @@ class infoDialog(QWidget):
 
     def takePhoto(self):
         self.photos += 1
-        self.filename = "C:\\Users\\Cynth\\Documents\\face-recognition-system\\dataset\\{}\\".format(self.text)
+        self.filename = "dataset/{}".format(self.text)
         self.mkdir(self.filename)
         photo_save_path = os.path.join(os.path.dirname(os.path.abspath('__file__')), '{}'.format(self.filename))
         self.showImage2.save(photo_save_path + datetime.now().strftime("%Y%m%d%H%M%S") + ".png")
@@ -711,7 +713,7 @@ class infoDialog(QWidget):
         # 键入ID
         self.input_ID = self.Dialog.lineEdit_ID.text()
         # 打开数据库连接
-        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 查询语句，实现通过ID关键字检索个人信息的功能
@@ -764,7 +766,7 @@ class infoDialog(QWidget):
 
     def changeInfo(self):
         # 打开数据库连接
-        db = pymysql.connect(host="localhost", user="root", password="root", database="facerecognition")
+        db = pymysql.connect(host="localhost", user="root", password="Root0112", database="facedetect")
         # 使用cursor()方法获取操作游标
         cursor = db.cursor()
         # 写入数据库
